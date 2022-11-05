@@ -16,6 +16,11 @@ struct pengguna
 
 void tampilan();
 void adminLogin();
+void adminMenu();
+void adminListUser();
+void adminInputKendaraan();
+void adminCariHapusUser();
+void adminOrderKendaraan();
 void userMenu();
 void userSignUp();
 void userLogin();
@@ -84,7 +89,7 @@ void adminLogin()
   if (strcmp(admin.username, "admin") == 0 && strcmp(admin.password, "admin") == 0)
   {
     system("cls");
-    //   adminMEnu();
+    adminMenu();
   }
   else
   {
@@ -92,6 +97,48 @@ void adminLogin()
     system("pause");
     system("cls");
     main();
+  }
+}
+
+void adminMenu()
+{
+  printf("\t\t ADMIN - MENU \n\n");
+  printf(" [1] List Daftar User \n");
+  printf(" [2] Input List Kendaraan   \n");
+  printf(" [3] Cari dan Hapus Akun User    \n");
+  printf(" [4] Orderan User    \n");
+  printf(" [0] Log Out    \n");
+  line();
+  printf(" PILIH MENU : ");
+  scanf("%d", &pilih);
+  getchar();
+  switch (pilih)
+  {
+  case 1:
+    system("cls");
+    tampilan();
+    // adminListUser();
+    break;
+  case 2:
+    system("cls");
+    tampilan();
+    // adminInputKendaraan();
+    break;
+  case 3:
+    system("cls");
+    tampilan();
+    // adminCariHapusUser();
+    break;
+  case 4:
+    system("cls");
+    tampilan();
+    // adminOrderUser();
+    break;
+  default:
+    system("cls");
+    tampilan();
+    main();
+    break;
   }
 }
 
@@ -147,7 +194,7 @@ void userSignUp()
   printf("\nRegistrasi Sukes!\n");
   system("pause");
   system("cls");
-  main();
+  userMenu();
 }
 
 void userLogin()
@@ -181,6 +228,6 @@ void userLogin()
     printf("\nUsername / Password yang anda masukan salah!\n");
     system("pause");
     system("cls");
-    main();
+    userMenu();
   }
 }
