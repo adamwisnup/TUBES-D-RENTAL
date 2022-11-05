@@ -3,8 +3,6 @@
 #include <string.h>
 
 FILE *ptr;
-FILE *ptr2;
-FILE *temp;
 
 int pilih;
 char uname[100], pass[100];
