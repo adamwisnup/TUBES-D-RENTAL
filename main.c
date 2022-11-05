@@ -20,7 +20,7 @@ void adminMenu();
 void adminListUser();
 void adminInputKendaraan();
 void adminCariHapusUser();
-void adminOrderKendaraan();
+void adminOrderKendaran();
 void userMenu();
 void userSignUp();
 void userLogin();
