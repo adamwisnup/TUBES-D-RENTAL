@@ -1,4 +1,0 @@
-# Tubes-D-RENTAL
-
-D’Rental adalah program untuk membantu user dalam mencari dan menyewa kendaraan sesuai dengan kendaraan dan harga yang diinginkan. Program D’Rental ini ditujukan kepada pelanggan untuk menyewa kendaraan untuk bepergian. didalam programnya tedapat menu admin serta user. untuk menu admin akan terdapat beberapa fitur yaitu list daftar user, input list kendaraan, update stock kendaraan, mencari dan menghapus akun user, serta menampilkan kendaraan yang sudah di pesan oleh user. Kemudia di program user terdapat beberapa fitur dari ragister dan login user, kemudian terdapat list kendaraan yang bisa dipesan berdasarkan jenisnya, menampilkan kendaraan sesuai dengan harganya, fitur selanjutnya pengisian biodata oleh user untuk peminjaman. Kemudian fitur yang menampilkan spesifikasi kendaraan yang disewa. dan yang terakhir fitur Log out...
-
