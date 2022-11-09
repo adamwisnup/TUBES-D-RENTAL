@@ -4,28 +4,31 @@
 
 FILE *ptr;
 FILE *ptr2;
-FILE *temp;
 
-int pilih;
-char uname[100], pass[100];
-
+char uname[255], pass[255], str[255];
+int i, n, o;
 struct pengguna
 {
   char nama[100], username[100], password[100], address[100], notel[100], email[100];
-} user, admin;
+} user, admin, kndr;
 
 void tampilan();
-void adminLogin();
+void adminLogin(int l);
 void adminMenu();
 void adminListUser();
 void adminInputKendaraan();
-void adminCariHapusUser();
-void adminOrderKendaran();
 void userSignUp();
-void userLogin();
+void userLogin(int l);
 void userMenu();
 void userCheck();
+void userInfoKendaraan();
 
+void tampilanAwal()
+{
+  printf(" ====================================================================================\n");
+  printf(" ============================== WELCOME D'RENTAL ====================================\n");
+  printf(" ====================================================================================\n");
+}
 void tampilan()
 {
   printf(" ====================================================================================\n");
@@ -41,27 +44,25 @@ void line()
 void main()
 {
 
-  tampilan();
+  tampilanAwal();
   printf(" [1] USER \n");
   printf(" [2] ADMIN   \n");
   printf(" [0] EXIT    \n");
   line();
   printf(" PILIH MENU : ");
-  scanf("%d", &pilih);
+  scanf("%d", &o);
   getchar();
-  if (pilih == 1)
+  if (o == 1)
   {
     system("cls");
-    tampilan();
     userCheck();
   }
-  else if (pilih == 2)
+  else if (o == 2)
   {
     system("cls");
-    tampilan();
-    adminLogin();
+    adminLogin(3);
   }
-  else if (pilih == 0)
+  else if (o == 0)
   {
     system("cls");
     printf("\n");
@@ -80,24 +81,66 @@ void main()
 }
 
 // ================== ADMIN ADMIN ADMIN ========================================
-void adminLogin()
+void adminLogin(int l)
 {
+  tampilan();
   printf("\t\t ADMIN - LOGIN \n\n");
-  printf(" username : ");
+  printf("Masukan Username : ");
   gets(admin.username);
-  printf(" password : ");
+  printf("Masukan Password : ");
   gets(admin.password);
-  if (strcmp(admin.username, "admin") == 0 && strcmp(admin.password, "admin") == 0)
+  if (l > 1)
   {
-    system("cls");
-    adminMenu();
+    if (strcmp(admin.username, "admin") != 0)
+    {
+      printf("\n username salah \n\n");
+      system("pause");
+      system("cls");
+      n = 1;
+    }
+    else if (strcmp(admin.password, "admin") != 0)
+    {
+      printf("\n password salah \n\n");
+      system("pause");
+      system("cls");
+      n = 1;
+    }
+    else if (strcmp(admin.username, "admin") == 0 && strcmp(admin.password, "admin") == 0)
+    {
+      printf("\n Login berhasil \n\n");
+      system("pause");
+      system("cls");
+      n = 2;
+    }
   }
-  else
+  else if (l == 1)
   {
-    printf("\n\n username dan password salah. \n\n");
-    system("pause");
-    system("cls");
+    if (strcmp(admin.username, "admin") != 0 && strcmp(admin.password, "admin") != 0)
+    {
+      printf("\n username / password salah \n\n");
+      system("pause");
+      system("cls");
+      n = 3;
+    }
+    else if (strcmp(admin.username, "admin") == 0 && strcmp(admin.password, "admin") == 0)
+    {
+      printf("\n Login berhasil \n\n");
+      system("pause");
+      system("cls");
+      n = 2;
+    }
+  }
+  switch (n)
+  {
+  case 1:
+    adminLogin(l - 1);
+    break;
+  case 2:
+    adminMenu();
+    break;
+  case 3:
     main();
+    break;
   }
 }
 
@@ -111,9 +154,9 @@ void adminMenu()
   printf(" [0] Log Out    \n");
   line();
   printf(" PILIH MENU : ");
-  scanf("%d", &pilih);
+  scanf("%d", &o);
   getchar();
-  switch (pilih)
+  switch (o)
   {
   case 1:
     system("cls");
@@ -138,7 +181,7 @@ void adminMenu()
   }
 }
 
-// =================== USER USER USER ==========================================
+// ============================= USER USER USER ==========================================
 void userCheck()
 {
   tampilan();
@@ -148,19 +191,19 @@ void userCheck()
   printf(" [0] Back    \n");
   line();
   printf(" PILIH MENU : ");
-  scanf("%d", &pilih);
+  scanf("%d", &o);
   getchar();
-  if (pilih == 1)
+  if (o == 1)
   {
     system("cls");
     userSignUp();
   }
-  else if (pilih == 2)
+  else if (o == 2)
   {
     system("cls");
-    userLogin();
+    userLogin(3);
   }
-  else if (pilih == 0)
+  else if (o == 0)
   {
     system("cls");
     main();
@@ -170,76 +213,178 @@ void userCheck()
     printf("\n Pilihan yang dimasukan salah ! \n\n");
     system("pause");
     system("cls");
-    userMenu();
+    userCheck();
   }
 }
+
 void userSignUp()
 {
-  ptr = fopen("userData.dat", "ab");
-  printf("\t\t USER - REGISTER \n\n");
-  printf("Nama\t\t: ");
-  gets(user.nama);
-  printf("No Telepon\t: ");
-  gets(user.notel);
-  printf("Alamat\t\t: ");
-  gets(user.address);
-  printf("Email\t\t: ");
-  gets(user.email);
-  printf("Username\t: ");
-  gets(user.username);
-  printf("Password\t: ");
-  gets(user.password);
-  fwrite(&user, sizeof(user), 1, ptr);
+  tampilan();
+  printf("\t\t USER - SIGNUP \n\n");
+  printf("Buat username\t: ");
+  gets(uname);
+  ptr = fopen("BDrive-user.dat", "rb");
+  ptr2 = fopen("BDrive-userSignup.dat", "wb");
+  while (fread(&user, sizeof(user), 1, ptr) == 1)
+  {
+    if (strcmp(user.username, uname) == 0)
+    {
+      fwrite(&user, sizeof(user), 1, ptr2);
+    }
+  }
   fclose(ptr);
-  printf("\nRegistrasi Sukes! Selamat Datang %s!\n", user.nama);
+  fclose(ptr2);
+  ptr = fopen("BDrive-user.dat", "ab");
+  ptr2 = fopen("BDrive-userSignup.dat", "rb");
+  if (fgets(str, 255, ptr2) != NULL)
+  {
+    n = 0;
+  }
+  else if (fgets(str, 255, ptr2) == NULL)
+  {
+    strcpy(user.username, uname);
+    printf(" Buat password\t: ");
+    gets(user.password);
+    printf("Nama\t\t: ");
+    gets(user.nama);
+    printf("No Telepon\t: ");
+    gets(user.notel);
+    printf("Alamat\t\t: ");
+    gets(user.address);
+    printf("Email\t\t: ");
+    gets(user.email);
+    fwrite(&user, sizeof(user), 1, ptr);
+    n = 1;
+  }
+  fclose(ptr);
+  fclose(ptr2);
   system("pause");
   system("cls");
-  userMenu();
+  remove("BDrive-userSignup.dat");
+  switch (n)
+  {
+  case 0:
+    printf("\n username telah digunakan. \n");
+    tampilan();
+    system("pause");
+    system("cls");
+    userSignUp();
+    break;
+  case 1:
+    printf("\n Pendaftaran Berhasil. \n\n");
+    printf(" [1] Login \n");
+    printf(" [0] Kembali \n\n");
+    printf(" Pilih : ");
+    scanf("%d", &o);
+    getchar();
+    if (o == 1)
+    {
+      system("cls");
+      userLogin(3);
+    }
+    else
+    {
+      system("cls");
+      main();
+    }
+    break;
+  }
 }
 
-void userLogin()
+void userLogin(int l)
 {
-  int i;
-  char uname[50], pass[50];
-
-  for (i = 3; i >= 1; i--)
+  tampilan();
+  ptr = fopen("BDrive-user.dat", "rb");
+  ptr2 = fopen("BDrive-userLogin.dat", "wb");
+  printf("\t\t USER - LOGIN \n\n");
+  printf("Masukan Username\t: ");
+  gets(uname);
+  printf("Masukan Password\t: ");
+  gets(pass);
+  if (l >= 1)
   {
-    ptr = fopen("userData.dat", "rb");
-    printf("\t\t USER - LOGIN \n\n");
-    printf("Username : ");
-    gets(uname);
-    printf("Password : ");
-    gets(pass);
-    // check username & password
     while (fread(&user, sizeof(user), 1, ptr) == 1)
     {
-      if (strcmp(uname, user.username) == 0 && strcmp(pass, user.password) == 0)
+      if (strcmp(user.username, uname) == 0)
       {
-        printf("\nLogin Sukses, Selamat Datang %s!\n", user.nama);
-        system("pause");
-        system("cls");
-        userMenu();
-        i = i * 0;
-      }
-      else
-      {
-        printf("\nUsername / Password yang anda masukan salah!\n");
-        if (i > 1)
-        {
-          printf("Silahkan coba lagi, kesempatan Anda tersisa %d lagi\n", i - 1);
-          system("pause");
-          system("cls");
-        }
-        else
-        {
-          printf("Kesempatan Anda sudah habis\n");
-          system("pause");
-          system("cls");
-          userCheck();
-        }
+        fwrite(&user, sizeof(user), 1, ptr2);
       }
     }
-    fclose(ptr);
+    while (fgets(str, 255, ptr2) == NULL)
+    {
+      fwrite(&user, sizeof(user), 1, ptr2);
+    }
+  }
+  fclose(ptr);
+  fclose(ptr2);
+  ptr = fopen("BDrive-user.dat", "rb");
+  ptr2 = fopen("BDrive-userLogin.dat", "rb");
+  if (l > 1)
+  {
+    while (fread(&user, sizeof(user), 1, ptr2) == 1)
+    {
+      if (strcmp(uname, user.username) != 0)
+      {
+        printf("\n username salah \n\n");
+        system("pause");
+        system("cls");
+        n = 1;
+        break;
+      }
+      else if (strcmp(pass, user.password) != 0)
+      {
+        printf("\n password salah \n\n");
+        system("pause");
+        system("cls");
+        n = 1;
+        break;
+      }
+      else if (strcmp(uname, user.username) == 0 && strcmp(pass, user.password) == 0)
+      {
+        printf("\n Login berhasil \n\n");
+        system("pause");
+        system("cls");
+        n = 2;
+        break;
+      }
+    }
+  }
+  else if (l == 1)
+  {
+    while (fread(&user, sizeof(user), 1, ptr2) == 1)
+    {
+      if (strcmp(uname, user.username) != 0 && strcmp(pass, user.password) != 0)
+      {
+        printf("\n username dan password salah \n\n");
+        system("pause");
+        system("cls");
+        n = 3;
+        break;
+      }
+      else if (strcmp(uname, user.username) == 0 && strcmp(pass, user.password) == 0)
+      {
+        printf("\n Login berhasil \n\n");
+        system("pause");
+        system("cls");
+        n = 2;
+        break;
+      }
+    }
+  }
+  fclose(ptr);
+  fclose(ptr2);
+  remove("BDrive-userLogin.dat");
+  switch (n)
+  {
+  case 1:
+    userLogin(l - 1);
+    break;
+  case 2:
+    userMenu(uname);
+    break;
+  case 3:
+    main();
+    break;
   }
 }
 
@@ -252,9 +397,9 @@ void userMenu()
   printf(" [0] Log Out    \n");
   line();
   printf(" PILIH MENU : ");
-  scanf("%d", &pilih);
+  scanf("%d", &o);
   getchar();
-  switch (pilih)
+  switch (o)
   {
   case 1:
     system("cls");
