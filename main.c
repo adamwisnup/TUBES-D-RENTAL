@@ -5,18 +5,25 @@
 FILE *ptr;
 FILE *ptr2;
 
-char uname[255], pass[255], str[255];
-int i, n, o;
+char uname[255], pass[255], str[255], find[100];
+int i, n, o, s;
 struct pengguna
 {
   char nama[100], username[100], password[100], address[100], notel[100], email[100];
-} user, admin, kndr;
+} user, admin;
+struct kendaraan
+{
+  char merk[50], jenis[50];
+  int perhari[50], hargasewa[50];
+} kndr;
 
 void tampilan();
 void adminLogin(int l);
 void adminMenu();
 void adminListUser();
 void adminInputKendaraan();
+void adminUser();
+void adminCariHapusUser();
 void userSignUp();
 void userLogin(int l);
 void userMenu();
@@ -26,13 +33,13 @@ void userInfoKendaraan();
 void tampilanAwal()
 {
   printf(" ====================================================================================\n");
-  printf(" ============================== WELCOME D'RENTAL ====================================\n");
+  printf(" ============================== WELCOME B'DRIVE =====================================\n");
   printf(" ====================================================================================\n");
 }
 void tampilan()
 {
   printf(" ====================================================================================\n");
-  printf(" ================================== D'RENTAL ========================================\n");
+  printf(" ================================== B'DRIVE =========================================\n");
   printf(" ====================================================================================\n");
 }
 
@@ -68,7 +75,7 @@ void main()
     printf("\n");
     line();
     printf("                                     SEE YOU                                       \n\n");
-    printf("                           THANK YOU FOR USING D'RENTAL :)                         \n");
+    printf("                           THANK YOU FOR USING B'DRIVE :)                         \n");
     line();
   }
   else
@@ -160,15 +167,36 @@ void adminMenu()
   {
   case 1:
     system("cls");
-    // adminListUser();
+    adminListUser();
     break;
   case 2:
     system("cls");
-    // adminInputKendaraan();
+    tampilan();
+    printf("\t\t ADMIN - INPUT KENDARAAN \n\n");
+    ptr = fopen("BDrive-kendaraan.dat", "ab");
+    printf(" Banyak kendaraan yang akan di tambahkan : ");
+    scanf("%d", &o);
+    for (i = 0; i < o; i++)
+    {
+      getchar();
+      printf("\n %d. Merk\t: ", i + 1);
+      gets(kndr.merk);
+      printf("\n    Jenis\t: ", i + 1);
+      gets(kndr.jenis);
+      printf("\n    Harga perhari\t: ");
+      scanf("%d", &kndr.perhari);
+      fwrite(&kndr, sizeof(kndr), 1, ptr);
+    }
+    fclose(ptr);
+    printf("\n Kendaraan berhasil di tambahkan.\n");
+    line();
+    system("pause");
+    system("cls");
+    adminMenu();
     break;
   case 3:
     system("cls");
-    // adminCariHapusUser();
+    adminCariHapusUser();
     break;
   case 4:
     system("cls");
@@ -178,6 +206,153 @@ void adminMenu()
     system("cls");
     main();
     break;
+  }
+}
+
+void adminListUser()
+{
+  tampilan();
+  printf("\t\t ADMIN - DAFTAR USER \n\n");
+  ptr = fopen("BDrive-user.dat", "rb");
+  i = 1;
+  while (fread(&user, sizeof(user), 1, ptr) == 1)
+  {
+    printf("%d. Nama Lengkap\t: %s \n", i, user.nama);
+    printf("   Username\t: %s \n", user.username);
+    printf("   Alamat\t: %s \n", user.address);
+    printf("   No. Telpon\t: %s \n", user.notel);
+    printf("   Email\t: %s \n", user.email);
+    i++;
+  }
+  fclose(ptr);
+  line();
+  printf(" [0] Kembali \n\n");
+  printf(" Pilih : ");
+  scanf("%d", &n);
+  switch (n)
+  {
+  case 0:
+    system("cls");
+    adminMenu();
+    break;
+  default:
+    system("pause");
+    system("cls");
+    adminListUser();
+  }
+}
+
+void adminCariHapusUser()
+{
+  tampilan();
+  printf("\t\t ADMIN - Daftar User \n\n");
+  ptr = fopen("BDrive-user.dat", "rb");
+  s = 1;
+  while (fread(&user, sizeof(user), 1, ptr) == 1)
+  {
+    printf(" %d. Nama Lengkap    : %s \n", s, user.nama);
+    printf("  Nama Pengguna   : %s \n", user.username);
+    printf("   Alamat\t: %s \n", user.address);
+    printf("   No. Telpon\t: %s \n", user.notel);
+    printf("   Email\t: %s \n", user.email);
+    s++;
+  }
+  fclose(ptr);
+  line();
+  printf(" [1] Cari User \n [2] Hapus User \n  [0] Kembali \n\n");
+  printf(" Pilih : ");
+  scanf("%d", &n);
+  switch (n)
+  {
+  case 0:
+    system("cls");
+    adminMenu();
+    break;
+  case 1:
+    system("cls");
+    adminCariUser();
+    break;
+  case 2:
+    line();
+    ptr = fopen("BDrive-user.dat", "rb");
+    ptr2 = fopen("BDrive-user_new.dat", "wb");
+    printf(" Masukan nama user yang ingin dihapus: ");
+    getchar();
+    gets(find);
+    while (fread(&user, sizeof(user), 1, ptr) == 1)
+    {
+      if (strcmp(user.nama, find) != 0)
+      {
+        fwrite(&user, sizeof(user), 1, ptr2);
+      }
+      else
+      {
+        printf("\n Product berhasil dihapus. \n\n");
+      }
+    }
+    fclose(ptr);
+    fclose(ptr2);
+    remove("BDrive-user.dat");
+    rename("BDrive-user_new.dat", "BDrive-user.dat");
+    system("pause");
+    system("cls");
+    adminUser();
+    break;
+  default:
+    system("pause");
+    system("cls");
+    adminCariHapusUser();
+  }
+}
+
+void adminCariUser()
+{
+  tampilan();
+  printf("\t\t ADMIN - Cari User \n\n");
+  ptr = fopen("BDrive-user.dat", "rb");
+  ptr2 = fopen("BDrive-user_find.dat", "wb");
+  getchar();
+  printf("\n Silahkan masukkan username penjual yang dicari : \n ");
+  gets(find);
+  while (fread(&user, sizeof(user), 1, ptr) == 1)
+  {
+    if (strcmp(user.username, find) == 0)
+    {
+      fwrite(&user, sizeof(user), 1, ptr2);
+    }
+  }
+  fclose(ptr);
+  fclose(ptr2);
+
+  ptr = fopen("Bdrive-user_find.dat", "rb");
+  if (fread(&user, sizeof(user), 1, ptr) == 1)
+  {
+    printf("\n  Nama Lengkap    : %s %s \n", user.nama);
+    printf("  Nama Pengguna   : %s \n", user.username);
+  }
+  else if (fgets(str, 255, ptr) == NULL)
+  {
+    printf("\n  Penjual tidak ditemukan. \n");
+  }
+  fclose(ptr);
+  remove("BDrive-user_find.dat");
+  line();
+findx:
+  printf(" [1] Cari User lain \n [0] Kembali \n\n");
+  printf(" Pilih : ");
+  scanf("%d", &n);
+  switch (n)
+  {
+  case 0:
+    system("cls");
+    adminMenu();
+    break;
+  case 1:
+    system("cls");
+    adminCariUser();
+    break;
+  default:
+    goto findx;
   }
 }
 
@@ -258,14 +433,11 @@ void userSignUp()
   }
   fclose(ptr);
   fclose(ptr2);
-  system("pause");
-  system("cls");
   remove("BDrive-userSignup.dat");
   switch (n)
   {
   case 0:
     printf("\n username telah digunakan. \n");
-    tampilan();
     system("pause");
     system("cls");
     userSignUp();
